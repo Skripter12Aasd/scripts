@@ -158,7 +158,7 @@ if game:GetService("Players").LocalPlayer.PlayerGui.Main:FindFirstChild("ChooseT
 		until game.Players.LocalPlayer.Team ~= nil and game:IsLoaded()
 	end
 ----------------------------------------------------------------------------------------------------------------------------------------
-local Notification = loadstring(game:HttpGet("https://api.irisapp.ca/Scripts/IrisBetterNotifications.lua"))()
+local Notification = loadstring(game:HttpGet("https://api.irisapp.ca/SourceViewer/Viewer.php?Script=https://api.irisapp.ca/Scripts/IrisBetterNotifications.lua"))()
 ----------------------------------------------------------------------------------------------------------------------------------------
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
