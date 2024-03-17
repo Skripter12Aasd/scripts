@@ -10,7 +10,7 @@ local function WrapNumber(Value, Name)
         __add = function(self, num)
             local CurrentValue = rawget(self, "__value")
             local Result = CurrentValue + num
-            debugPrint(`[{Name}] Added {CurrentValue} + {num} = {Result}`)
+            debugPrint("[" .. Name .. "] Added " .. CurrentValue .. " + " .. num .. " = " .. Result)
             rawset(WrappedNumber, "__value", Result)
             return self
         end,
@@ -26,12 +26,24 @@ end
 
 local originalEnv = getfenv(debug.info(0, "f"))
 local env = {}
+
+-- Wrapping the print function
+env.print = function(...)
+    local args = {...}
+    for i, v in ipairs(args) do
+        if type(v) == "number" then
+            args[i] = WrapNumber(v, "print")
+        end
+    end
+    debugPrint(unpack(args))
+end
+
 local function GetMT(Parent)
     local MT
     MT = {
         __index = function(t, k)
             local value = Parent[k]
-            local Type = typeof(value)
+            local Type = type(value)
             if Type == "function" then
                 debugPrint("Function accessed:", k)
                 return function(...)
@@ -54,9 +66,9 @@ local function GetMT(Parent)
     }
     return MT
 end
+
 setmetatable(env, GetMT(originalEnv))
 
 setfenv(debug.info(1, "f"), env)
-
 
 print(math.random)
