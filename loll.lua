@@ -59,4 +59,4 @@ setmetatable(env, GetMT(originalEnv))
 setfenv(debug.info(1, "f"), env)
 
 
-print(math.random())
+print(math.random)
