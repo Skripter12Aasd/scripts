@@ -10,7 +10,6 @@ setmetatable(env, {
         if type(value) ~= "function" then
             debugPrint("Constant accessed:", k, "=", value)
         else
-            -- Attempt to get the function name if available
             local functionName = env.funcNames[value]
             if functionName then
                 debugPrint("Function accessed:", functionName)
@@ -52,7 +51,7 @@ local function libs()
             for funcName, func in pairs(lib) do
                 if type(func) == "function" then
                     -- Name the function and associate it with its name
-                    env[funcName] = nameFunc(func, libName .. "." .. funcName)
+                    env[libName .. "." .. funcName] = nameFunc(func, libName .. "." .. funcName)
                     debugPrint("Function accessed:", libName .. "." .. funcName)
                 end
             end
