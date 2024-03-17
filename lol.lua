@@ -41,6 +41,4 @@ local function libs()
     end
 end
 
--- Test
-libs()
 print(math.random)
