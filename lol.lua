@@ -10,7 +10,7 @@ local function WrapNumber(Value, Name)
         __add = function(self, num)
             local CurrentValue = rawget(self, "__value")
             local Result = CurrentValue + num
-            debugPrint(`[{Name}] Added {CurrentValue} + {num} = {Result}`)
+            debugPrint("[" .. Name .. "] Added " .. CurrentValue .. " + " .. num .. " = " .. Result)
             rawset(WrappedNumber, "__value", Result)
             return self
         end,
@@ -24,14 +24,23 @@ local function WrapNumber(Value, Name)
     return WrappedNumber
 end
 
-local originalEnv = getfenv(debug.info(0, "f"))
-local env = {}
+-- Override the print function globally
+_G.print = function(...)
+    local args = {...}
+    for i, v in ipairs(args) do
+        if type(v) == "number" then
+            args[i] = WrapNumber(v, "print")
+        end
+    end
+    debugPrint(unpack(args))
+end
+
 local function GetMT(Parent)
     local MT
     MT = {
         __index = function(t, k)
             local value = Parent[k]
-            local Type = typeof(value)
+            local Type = type(value)
             if Type == "function" then
                 debugPrint("Function accessed:", k)
                 return function(...)
@@ -54,9 +63,11 @@ local function GetMT(Parent)
     }
     return MT
 end
-setmetatable(env, GetMT(originalEnv))
 
+-- Setting up the environment
+local originalEnv = getfenv(debug.info(0, "f"))
+local env = setmetatable({}, GetMT(originalEnv))
 setfenv(debug.info(1, "f"), env)
 
-
+-- Now you can print math.random and it should go through the overridden print function
 print(math.random)
