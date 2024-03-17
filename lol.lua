@@ -10,7 +10,7 @@ setmetatable(env, {
         if type(value) ~= "function" then
             debugPrint("Constant accessed:", k, "=", value)
         else
-            local functionName = env.funcNames[value]
+            local functionName = env.funcNames[tostring(value)]
             if functionName then
                 debugPrint("Function accessed:", functionName)
             else
@@ -24,11 +24,11 @@ setmetatable(env, {
 setfenv(1, env)
 
 -- Define a table to hold function names
-env.funcNames = setmetatable({}, {__mode = "k"}) -- We use weak keys to prevent memory leaks
+env.funcNames = {}
 
 -- Function to associate a function with its name
 local function nameFunc(func, name)
-    env.funcNames[func] = name
+    env.funcNames[tostring(func)] = name
     return func
 end
 
