@@ -10,7 +10,13 @@ setmetatable(env, {
         if type(value) ~= "function" then
             debugPrint("Constant accessed:", k, "=", value)
         else
-            debugPrint("Function accessed:", k)
+            -- Attempt to get the function name if available
+            local functionName = debug.getinfo(value, "n").name
+            if functionName then
+                debugPrint("Function accessed:", functionName)
+            else
+                debugPrint("Function accessed: (Unknown)")
+            end
         end
         return value
     end
