@@ -1,3 +1,5 @@
+_G.math = math
+
 local function debugPrint(...)
     print("[Debug]", ...)
 end
