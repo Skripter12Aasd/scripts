@@ -1,5 +1,3 @@
-_G.math = math
-
 local function debugPrint(...)
     print("[Debug]", ...)
 end
@@ -32,7 +30,7 @@ local function libs()
     }
 
     for _, libName in ipairs(libslua) do
-        local lib = _G[libName]
+        local lib = originalEnv[libName]
         if lib then
             for funcName, func in pairs(lib) do
                 if type(func) == "function" then
