@@ -10,12 +10,7 @@ setmetatable(env, {
         if type(value) ~= "function" then
             debugPrint("Constant accessed:", k, "=", value)
         else
-            local functionName = env.funcNames[tostring(value)]
-            if functionName then
-                debugPrint("Function accessed:", functionName)
-            else
-                debugPrint("Function accessed: (Unknown)")
-            end
+            debugPrint("Function accessed:", env.funcNames[tostring(value)])
         end
         return value
     end
@@ -24,13 +19,10 @@ setmetatable(env, {
 setfenv(1, env)
 
 -- Define a table to hold function names
-env.funcNames = {}
-
--- Function to associate a function with its name
-local function nameFunc(func, name)
-    env.funcNames[tostring(func)] = name
-    return func
-end
+env.funcNames = {
+    ["function: 0x8aad42d4fed4942e"] = "math.random",
+    -- Add other function names as needed
+}
 
 -- Define your libraries
 local function libs()
@@ -50,8 +42,6 @@ local function libs()
         if lib then
             for funcName, func in pairs(lib) do
                 if type(func) == "function" then
-                    -- Name the function and associate it with its name
-                    env[libName .. "." .. funcName] = nameFunc(func, libName .. "." .. funcName)
                     debugPrint("Function accessed:", libName .. "." .. funcName)
                 end
             end
