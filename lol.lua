@@ -10,7 +10,7 @@ local function WrapNumber(Value, Name)
         __add = function(self, num)
             local CurrentValue = rawget(self, "__value")
             local Result = CurrentValue + num
-            debugPrint(string.format("[%s] Added %s + %s = %s", Name, CurrentValue, num, Result))
+            debugPrint(`[{Name}] Added {CurrentValue} + {num} = {Result}`)
             rawset(WrappedNumber, "__value", Result)
             return self
         end,
@@ -37,12 +37,12 @@ local function GetMT(Parent)
                 return function(...)
                     debugPrint(k, "was called with:", ...)
                     local Returned = {value(...)}
-                    for k, v in ipairs(Returned) do
+                    for k, v in next, Returned do
                         if type(v) == "number" then
                             Returned[k] = WrapNumber(v, k)
                         end
                     end
-                    return table.unpack(Returned)
+                    return unpack(Returned)
                 end
             elseif Type == "table" then
                 return setmetatable({}, GetMT(value))
@@ -58,4 +58,5 @@ setmetatable(env, GetMT(originalEnv))
 
 setfenv(debug.info(1, "f"), env)
 
-print(math.random() + 3)
+
+print(math.random())
