@@ -24,11 +24,8 @@ local function WrapNumber(Value, Name)
     return WrappedNumber
 end
 
-local originalEnv = getfenv(debug.info(0, "f"))
-local env = {}
-
--- Wrapping the print function
-env.print = function(...)
+-- Override the print function globally
+_G.print = function(...)
     local args = {...}
     for i, v in ipairs(args) do
         if type(v) == "number" then
@@ -67,8 +64,10 @@ local function GetMT(Parent)
     return MT
 end
 
-setmetatable(env, GetMT(originalEnv))
-
+-- Setting up the environment
+local originalEnv = getfenv(debug.info(0, "f"))
+local env = setmetatable({}, GetMT(originalEnv))
 setfenv(debug.info(1, "f"), env)
 
+-- Now you can print math.random and it should go through the overridden print function
 print(math.random)
