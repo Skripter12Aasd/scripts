@@ -40,3 +40,7 @@ local function libs()
         end
     end
 end
+
+-- Test
+libs()
+print(math.random)
